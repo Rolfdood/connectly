@@ -10,6 +10,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
       theme={theme as ToasterProps["theme"]}
+      position="top-center"
       className="toaster group"
       icons={{
         success: (
@@ -39,6 +40,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast: "cn-toast",
+          success:
+            "!bg-green-500/10 !border-green-500/20 !text-green-700 dark:!text-green-300",
+          error:
+            "!bg-red-500/10 !border-red-500/20 !text-red-700 dark:!text-red-300",
         },
       }}
       {...props}
