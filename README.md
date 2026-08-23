@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Connectly
+
+A minimalistic payment dApp built on the **Stellar Testnet**. Connectly enables users to connect their Freighter wallet, view their XLM balance, and send payments to any Stellar address with a clean, responsive UI.
+
+> **Status**: Under active development. This project is currently unlicensed.
+
+## Features
+
+- **Wallet Integration** — Connect and disconnect your [Freighter](https://www.freighter.app/) wallet with an extensible adapter architecture.
+- **Balance Display** — Real-time XLM balance fetched from the Stellar Horizon Testnet, with auto-refresh after transactions.
+- **Send Payments** — Send XLM to any Stellar address with real-time validation, fee estimation, and a confirmation step.
+- **Transaction Feedback** — Clear success and failure states with transaction hashes and direct links to [Stellar Expert](https://stellar.expert).
+- **Transaction History** — Session-scoped list of recent sends with detail modals and copy-to-clipboard actions.
+- **Theme Toggle** — Switch between light, dark, and system themes with smooth transitions and persistent preference.
+
+## Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org/) 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) v4
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com/) (New York style, Neutral base)
+- **Blockchain**: [Stellar](https://stellar.org/) Testnet
+- **Wallet SDK**: [`@stellar/freighter-api`](https://www.npmjs.com/package/@stellar/freighter-api)
+- **Horizon SDK**: [`@stellar/stellar-sdk`](https://www.npmjs.com/package/@stellar/stellar-sdk)
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) 18+ and a package manager (`npm`, `pnpm`, or `yarn`)
+- [Freighter](https://www.freighter.app/) browser extension installed and configured for **Testnet**
+- A funded Stellar Testnet account (get free XLM from the [Stellar Laboratory Friendbot](https://laboratory.stellar.org/#account-creator?network=test))
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Rolfdood/connectly.git
+cd connectly
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+# or
+pnpm install
+# or
+yarn install
+```
+
+### 3. Run the development server
 
 ```bash
 npm run dev
 # or
-yarn dev
-# or
 pnpm dev
 # or
-bun dev
+yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> **Note**: This project uses the Stellar **Testnet**. Ensure your Freighter wallet is set to Testnet mode before connecting.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Build for production
 
-## Learn More
+```bash
+npm run build
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+connectly/
+├── app/                  # Next.js App Router
+│   ├── layout.tsx        # Root layout with providers
+│   ├── page.tsx          # Main dashboard page
+│   └── globals.css       # Tailwind theme variables
+├── components/
+│   └── ui/               # shadcn/ui components
+├── lib/
+│   └── utils.ts          # Utility helpers (cn, etc.)
+├── public/               # Static assets
+├── next.config.ts
+├── package.json
+└── tsconfig.json
+```
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is currently unlicensed and under active development. All rights reserved.
