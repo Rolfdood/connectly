@@ -17,6 +17,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useWallet } from "@/components/providers/wallet-provider";
+import { useTxHistory } from "@/components/providers/tx-history-provider";
 import { useBalance } from "@/hooks/use-balance";
 import {
   submitPayment,
@@ -39,6 +40,7 @@ function addXLM(a: string, b: string): string {
 export function SendForm() {
   const { isConnected, publicKey, adapter, network } = useWallet();
   const { balance, maxSendable, baseFee, refresh } = useBalance();
+  const { addTx } = useTxHistory();
 
   const isWrongNetwork =
     network !== null && network !== Networks.TESTNET;
@@ -96,10 +98,12 @@ export function SendForm() {
       toast.success("Transaction submitted", {
         description: `Hash: ${txHash.slice(0, 8)}...${txHash.slice(-8)}`,
       });
+      addTx({ hash: txHash, destination, amount, status: "success" });
       setDestination("");
       setAmount("");
       await refresh();
     } catch (err) {
+      addTx({ hash: "", destination, amount, status: "failed" });
       if (err instanceof DestinationAccountNotFundedError) {
         toast.error("Transaction failed", {
           description: "Destination account does not exist.",

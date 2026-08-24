@@ -1,6 +1,7 @@
 import { BalanceCard } from "@/components/balance-card";
 import { SendForm } from "@/components/send-form";
 import { WalletCard } from "@/components/wallet-card";
+import { TransactionHistory } from "@/components/transaction-history";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
         <BalanceCard />
         <SendForm />
       </div>
+      <TransactionHistory />
     </div>
   );
 }
