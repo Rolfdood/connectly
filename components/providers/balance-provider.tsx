@@ -93,17 +93,11 @@ export function BalanceProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!isConnected || !publicKey) {
-      setState({
-        balance: null,
-        maxSendable: null,
-        baseFee: null,
-        isLoading: false,
-        error: null,
-        isUnfunded: false,
-      });
       return;
     }
 
+    // Fetch balance from external Horizon API when wallet connection/publicKey changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refresh();
   }, [isConnected, publicKey, refresh]);
 
