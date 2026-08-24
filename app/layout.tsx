@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { WalletProvider } from "@/components/providers/wallet-provider";
 import { Header } from "@/components/header";
+import { BalanceProvider } from "@/components/providers/balance-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
@@ -37,18 +38,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           disableTransitionOnChange={false}
         >
           <WalletProvider>
-            <Header />
-            <main className="flex flex-1 flex-col">
-              <div className="mx-auto w-full max-w-3xl px-4 py-8">
-                {children}
-              </div>
-            </main>
-            <footer className="border-t py-6">
-              <div className="mx-auto max-w-3xl px-4 text-center text-sm text-muted-foreground">
-                Connectly — Built on Stellar Testnet
-              </div>
-            </footer>
-            <Toaster />
+            <BalanceProvider>
+              <Header />
+              <main className="flex flex-1 flex-col">
+                <div className="mx-auto w-full max-w-3xl px-4 py-8">
+                  {children}
+                </div>
+              </main>
+              <footer className="border-t py-6">
+                <div className="mx-auto max-w-3xl px-4 text-center text-sm text-muted-foreground">
+                  Connectly — Built on Stellar Testnet
+                </div>
+              </footer>
+              <Toaster />
+            </BalanceProvider>
           </WalletProvider>
         </ThemeProvider>
       </body>
