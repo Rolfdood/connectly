@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { toast } from "sonner";
-import { WatchWalletChanges } from "@stellar/freighter-api";
+import { WatchWalletChanges, getNetwork } from "@stellar/freighter-api";
 import type { WalletAdapter } from "@/lib/wallet/adapter";
 import { FreighterAdapter } from "@/lib/wallet/freighter-adapter";
 import { getWalletErrorMessage } from "@/lib/wallet/errors";
@@ -62,7 +62,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         setState((prev) => ({
           ...prev,
           publicKey: params.address ?? prev.publicKey,
-          network: params.network ?? prev.network,
+          network: params.networkPassphrase ?? prev.network,
         }));
       });
       watcherRef.current = watcher;
@@ -113,10 +113,22 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 
       if (attemptId !== connectionAttemptRef.current) return;
 
+      let networkPassphrase: string | null = null;
+      try {
+        const networkResult = await getNetwork();
+        if (!networkResult.error && networkResult.networkPassphrase) {
+          networkPassphrase = networkResult.networkPassphrase;
+        }
+      } catch {
+        // Ignore network fetch errors
+      }
+
+      if (attemptId !== connectionAttemptRef.current) return;
+
       setState({
         adapter,
         publicKey,
-        network: null,
+        network: networkPassphrase,
         isConnecting: false,
         isConnected: true,
         error: null,
@@ -172,10 +184,22 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         const publicKey = await adapter.getPublicKey();
         if (cancelled) return;
 
+        let networkPassphrase: string | null = null;
+        try {
+          const networkResult = await getNetwork();
+          if (!networkResult.error && networkResult.networkPassphrase) {
+            networkPassphrase = networkResult.networkPassphrase;
+          }
+        } catch {
+          // Ignore network fetch errors
+        }
+
+        if (cancelled) return;
+
         setState({
           adapter,
           publicKey,
-          network: null,
+          network: networkPassphrase,
           isConnecting: false,
           isConnected: true,
           error: null,
