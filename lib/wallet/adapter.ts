@@ -28,6 +28,7 @@ export interface WalletAdapter {
   /**
    * Signs a transaction XDR string and returns the signed XDR.
    * @param xdr - The base64-encoded transaction XDR to sign.
+   * @param networkPassphrase - The Stellar network passphrase (e.g. Networks.TESTNET).
    */
-  signTransaction(xdr: string): Promise<string>;
+  signTransaction(xdr: string, networkPassphrase?: string): Promise<string>;
 }

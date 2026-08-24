@@ -55,14 +55,20 @@ export class FreighterAdapter implements WalletAdapter {
     }
   }
 
-  async signTransaction(xdr: string): Promise<string> {
+  async signTransaction(
+    xdr: string,
+    networkPassphrase?: string
+  ): Promise<string> {
     try {
-      const result = await freighterSignTransaction(xdr);
+      const result = await freighterSignTransaction(xdr, { networkPassphrase });
       if (result.error) {
         throw mapFreighterError(result.error);
       }
       if (!result.signedTxXdr) {
-        throw new WalletError("UNKNOWN", "Freighter did not return a signed transaction.");
+        throw new WalletError(
+          "UNKNOWN",
+          "Freighter did not return a signed transaction."
+        );
       }
       return result.signedTxXdr;
     } catch (error) {
