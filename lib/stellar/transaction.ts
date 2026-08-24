@@ -5,7 +5,9 @@ import {
   Operation,
   Transaction,
   TransactionBuilder,
+  TransactionFailedError,
 } from "@stellar/stellar-sdk";
+import { WalletError } from "@/lib/wallet/errors";
 import { server } from "./horizon";
 
 export class DestinationAccountNotFundedError extends Error {
@@ -13,6 +15,48 @@ export class DestinationAccountNotFundedError extends Error {
     super(message);
     this.name = "DestinationAccountNotFundedError";
   }
+}
+
+export function mapTransactionError(error: unknown): string {
+  if (error instanceof WalletError && error.code === "USER_REJECTED") {
+    return "Transaction was cancelled in Freighter.";
+  }
+
+  if (error instanceof DestinationAccountNotFundedError) {
+    return "Destination account does not exist.";
+  }
+
+  if (error instanceof TransactionFailedError) {
+    const { transaction, operations } = error.getResultCodes();
+    if (transaction === "tx_bad_seq") {
+      return "Transaction sequence number invalid. Please try again.";
+    }
+    if (
+      transaction === "tx_insufficient_balance" ||
+      operations.includes("op_underfunded")
+    ) {
+      return "Insufficient balance to complete this transaction.";
+    }
+    if (operations.includes("op_no_destination")) {
+      return "Destination account does not exist.";
+    }
+  }
+
+  if (error instanceof Error) {
+    const msg = error.message.toLowerCase();
+    if (msg.includes("rejected") || msg.includes("denied") || msg.includes("cancel")) {
+      return "Transaction was cancelled in Freighter.";
+    }
+    if (msg.includes("bad_seq")) {
+      return "Transaction sequence number invalid. Please try again.";
+    }
+    if (msg.includes("underfunded") || msg.includes("insufficient balance")) {
+      return "Insufficient balance to complete this transaction.";
+    }
+    return error.message;
+  }
+
+  return "Transaction failed. Please try again.";
 }
 
 export interface SubmitPaymentParams {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { showSuccessToast, showErrorToast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -28,9 +29,9 @@ export function WalletCard() {
     if (!publicKey) return;
     try {
       await navigator.clipboard.writeText(publicKey);
-      toast.success("Address copied to clipboard");
+      showSuccessToast("Address copied to clipboard", { id: "address-copied" });
     } catch {
-      toast.error("Failed to copy address");
+      showErrorToast("Failed to copy address", { id: "address-copied-error" });
     }
   };
 
