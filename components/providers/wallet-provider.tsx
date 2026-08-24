@@ -8,8 +8,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { toast } from "sonner";
 import { WatchWalletChanges, getNetwork } from "@stellar/freighter-api";
+import { showSuccessToast, showErrorToast } from "@/lib/toast";
 import type { WalletAdapter } from "@/lib/wallet/adapter";
 import { FreighterAdapter } from "@/lib/wallet/freighter-adapter";
 import { getWalletErrorMessage } from "@/lib/wallet/errors";
@@ -94,7 +94,8 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       if (attemptId !== connectionAttemptRef.current) return;
 
       if (!available) {
-        toast.error("Freighter not installed", {
+        showErrorToast("Freighter not installed", {
+          id: "freighter-not-installed",
           description: "Please install the Freighter extension to connect your wallet.",
         });
         setState((prev) => ({
@@ -136,14 +137,18 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 
       localStorage.removeItem("connectly-wallet-manually-disconnected");
       startWatching();
-      toast.success("Wallet connected", {
+      showSuccessToast("Wallet connected", {
+        id: "wallet-connected",
         description: `Connected to ${publicKey.slice(0, 4)}...${publicKey.slice(-4)}`,
       });
     } catch (error) {
       if (attemptId !== connectionAttemptRef.current) return;
 
       const message = getWalletErrorMessage(error);
-      toast.error("Connection failed", { description: message });
+      showErrorToast("Connection failed", {
+        id: "wallet-connection-failed",
+        description: message,
+      });
       setState((prev) => ({
         ...prev,
         isConnecting: false,
@@ -164,7 +169,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       isConnected: false,
       error: null,
     });
-    toast.success("Wallet disconnected");
+    showSuccessToast("Wallet disconnected", { id: "wallet-disconnected" });
   }, [stopWatching]);
 
   // Auto-reconnect on mount unless the user manually disconnected

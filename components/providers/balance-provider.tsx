@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { toast } from "sonner";
+import { showSuccessToast, showErrorToast } from "@/lib/toast";
 import { useWallet } from "@/components/providers/wallet-provider";
 import { fetchNativeBalance } from "@/lib/stellar/balance";
 import { fetchBaseFee } from "@/lib/stellar/fees";
@@ -54,6 +54,7 @@ export function BalanceProvider({ children }: { children: React.ReactNode }) {
   });
 
   const isFetchingRef = useRef(false);
+  const hasFetchedRef = useRef(false);
 
   const refresh = useCallback(async () => {
     if (isFetchingRef.current) return;
@@ -75,10 +76,16 @@ export function BalanceProvider({ children }: { children: React.ReactNode }) {
         error: null,
         isUnfunded: balanceResult.isUnfunded,
       });
+
+      if (hasFetchedRef.current) {
+        showSuccessToast("Balance updated", { id: "balance-updated" });
+      }
+      hasFetchedRef.current = true;
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
       console.error("[BalanceProvider] Failed to fetch balance:", error);
-      toast.error("Failed to fetch balance", {
+      showErrorToast("Failed to fetch balance", {
+        id: "balance-fetch-failed",
         description: error.message,
       });
       setState((prev) => ({

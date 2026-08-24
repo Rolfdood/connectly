@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
+import { showSuccessToast, showErrorToast } from "@/lib/toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -48,9 +48,11 @@ function truncateAddress(address: string): string {
 async function copyToClipboard(text: string, label: string) {
   try {
     await navigator.clipboard.writeText(text);
-    toast.success(`${label} copied to clipboard`);
+    showSuccessToast(`${label} copied to clipboard`, { id: "hash-copied" });
   } catch {
-    toast.error(`Failed to copy ${label.toLowerCase()}`);
+    showErrorToast(`Failed to copy ${label.toLowerCase()}`, {
+      id: "hash-copied-error",
+    });
   }
 }
 
